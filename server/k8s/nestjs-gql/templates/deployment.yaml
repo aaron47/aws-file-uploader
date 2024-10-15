@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nestjs-gql
+  name: nestjs-gql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nestjs-gql
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nestjs-gql
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: /metrics
+        prometheus.io/port: '3000'
+    spec:
+      containers:
+        - image: aaron187/nestjs-gql
+          name: nestjs-gql
+          ports:
+            - containerPort: 3000

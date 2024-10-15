@@ -1,0 +1,21 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserDocument {
+  _id: String!
+  email: String!
+  files: [String!]
+}
+
+type RetreiveFileResponseDto {
+  base64: String!
+  contentType: String!
+  fileName: String!
+}
+
+type Query {
+  getUsers: [UserDocument!]!
+  getUserByEmail(email: String!): UserDocument
+  getUserFiles: [RetreiveFileResponseDto!]!
+}

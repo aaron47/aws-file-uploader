@@ -1,0 +1,7 @@
+query GetUserFiles {
+  getUserFiles {
+    contentType,
+    fileName,
+    base64
+  }
+}
