@@ -5,6 +5,8 @@ import {
   CallHandler,
   Logger,
 } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +19,7 @@ export class LoggingInterceptor implements NestInterceptor {
     if (context.getType() === 'http') {
       return this.logHttpCall(context, next);
     } else {
-      return next.handle();
+      return this.logGraphQlCall(context, next);
     }
   }
 
@@ -26,7 +28,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const userAgent = request.get('user-agent') || '';
     const { ip, method, path: url } = request;
     const correlationKey = uuidv4();
-    const userId = request.user?.userId;
+    const userId = request.user?.sub;
 
     this.logger.log(
       `[${correlationKey}] ${method} ${url} ${userId} ${userAgent} ${ip}: ${
@@ -40,10 +42,35 @@ export class LoggingInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse();
 
         const { statusCode } = response;
-        const contentLength = response.get('content-length');
 
         this.logger.log(
-          `[${correlationKey}] ${method} ${url} ${statusCode} ${contentLength}: ${
+          `[${correlationKey}] ${method} ${url} ${statusCode}: Completed in ${
+            Date.now() - now
+          }ms`,
+        );
+      }),
+    );
+  }
+
+  private logGraphQlCall(context: ExecutionContext, next: CallHandler) {
+    const gqlContext = GqlExecutionContext.create(context);
+    const info = gqlContext.getInfo<GraphQLResolveInfo>();
+    const { fieldName, operation } = info;
+    const args = gqlContext.getArgs<Record<string, any>>();
+    const correlationKey = uuidv4();
+    const userId = gqlContext.getContext().req?.user?.sub;
+
+    this.logger.log(
+      `[${correlationKey}] GraphQL Operation: ${operation.operation} ${fieldName} User: ${userId} Args: ${JSON.stringify(
+        args,
+      )}`,
+    );
+
+    const now = Date.now();
+    return next.handle().pipe(
+      tap(() => {
+        this.logger.log(
+          `[${correlationKey}] GraphQL Operation: ${operation.operation} ${fieldName} completed in ${
             Date.now() - now
           }ms`,
         );

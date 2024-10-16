@@ -23,6 +23,7 @@ const formSchema = z
     confirmPassword: z.string().min(6),
   })
   .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
     message: 'Passwords must match.',
   });
 

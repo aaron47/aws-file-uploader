@@ -10,7 +10,7 @@ export default function Home() {
   });
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] pt-40">
       <DragAndDrop refetch={refetch} />
 
       {loading && (
@@ -25,7 +25,7 @@ export default function Home() {
         <div>You currently do not have any files uploaded, go upload some!</div>
       )}
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
         {data?.getUserFiles.map((file, index) => (
           <div key={index}>
             <FileCard file={file} />

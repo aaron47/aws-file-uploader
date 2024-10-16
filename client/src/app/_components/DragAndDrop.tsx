@@ -69,7 +69,7 @@ export default function MyDropzone({ refetch }: Props) {
   return (
     <div
       {...getRootProps()}
-      className={`p-6 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-300 ease-in-out text-center mb-6 ${
+      className={`md:p-6 p-2 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-300 ease-in-out text-center mb-6 ${
         isDragActive
           ? 'border-blue-500 bg-blue-100'
           : 'border-gray-300 hover:border-blue-500'
