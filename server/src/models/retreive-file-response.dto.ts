@@ -2,10 +2,12 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class RetreiveFileResponseDto {
-  @Field()
+  @Field(() => String)
   base64: string;
-  @Field()
+
+  @Field(() => String)
   contentType: string;
-  @Field()
+
+  @Field(() => String)
   fileName: string;
 }

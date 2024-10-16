@@ -24,8 +24,6 @@ export class UsersResolver {
   @Query(() => [RetreiveFileResponseDto])
   @UseGuards(GqlAuthGuard)
   async getUserFiles(@GetCurrentUserFromGql('sub') userId: string) {
-    const userFiles = await this.userService.retreiveFiles(userId);
-
-    return userFiles;
+    return this.userService.retreiveFiles(userId);
   }
 }

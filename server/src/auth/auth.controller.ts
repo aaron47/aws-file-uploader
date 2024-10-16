@@ -12,8 +12,9 @@ import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { LocalAuthGuard } from 'src/shared/guards/local-auth.guard';
 import { JwtAuthGuard } from 'src/shared/guards/jwt.guard';
-import { GetCurrentUser } from 'src/shared/decorators/get-current-user.decorator';
 import { Response } from 'express';
+import { GetCurrentUser } from 'src/shared/decorators/get-current-user.decorator';
+import { UserDocument } from 'src/entities/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -29,10 +30,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   async login(
-    @Body() loginDto: AuthDto,
+    @GetCurrentUser() user: UserDocument,
     @Res({ passthrough: true }) response: Response,
   ) {
-    return this.authService.login(loginDto, response);
+    return this.authService.login(user, response);
   }
 
   @Get('me')

@@ -34,22 +34,7 @@ export class AuthService {
     });
   }
 
-  async login(loginDto: AuthDto, response: Response) {
-    const dbUser = await this.usersService.findByEmail(loginDto.email);
-
-    if (!dbUser) {
-      throw new UserNotFoundException('User not found');
-    }
-
-    const passwordsMatch = await this.verifyPassword(
-      dbUser.password,
-      loginDto.password,
-    );
-
-    if (!passwordsMatch) {
-      throw new WrongPasswordException();
-    }
-
+  async login(user: UserDocument, response: Response) {
     const expires = new Date();
     expires.setMilliseconds(
       expires.getMilliseconds() +
@@ -57,8 +42,8 @@ export class AuthService {
     );
 
     const jwtPayload: JwtPayload = {
-      sub: dbUser._id.toString(),
-      email: dbUser.email,
+      sub: user._id.toString(),
+      email: user.email,
     };
 
     const token = await this.jwtService.signAsync(jwtPayload);
