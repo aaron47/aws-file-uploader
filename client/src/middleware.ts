@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const token = cookies().get('Authentication')?.value;
 
   // If the user is on the login page and has a cookie, redirect to home
-  if (request.nextUrl.pathname.startsWith('/login')) {
+  if (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register')) {
     if (token && !isTokenExpired(token)) {
       return NextResponse.redirect(new URL('/', request.url));
     }
@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-	// If token exists and it is expired, clear the cookie and redirect to login
+  // If token exists and it is expired, clear the cookie and redirect to login
   if (token && isTokenExpired(token)) {
     cookies().delete('Authentication');
     const loginUrl = new URL('/login', request.url);
@@ -34,5 +34,7 @@ export function middleware(request: NextRequest) {
 
 // Apply middleware to every page except the API routes (if any)
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|/login).*)'], // Matches all routes except login and API routes],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|/login|/register).*)',
+  ], // Matches all routes except login and API routes],
 };

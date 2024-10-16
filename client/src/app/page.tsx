@@ -19,8 +19,9 @@ export default function Home() {
         </div>
       )}
       {error && <div>Error: {error.message}</div>}
+      {data?.getUserFiles.length === 0 && <div>You currently do not have any files uploaded, go upload some!</div>}
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         {data?.getUserFiles.map((file, index) => (
           <div key={index}>
             <FileCard file={file} />
