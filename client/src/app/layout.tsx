@@ -5,6 +5,7 @@ import { Nav } from './_components/Nav';
 import { ThemeProvider } from 'next-themes';
 import ApolloProviderWrapper from './util/apollo-provider';
 import { Toaster } from '@/components/ui/toaster';
+import ServerAuthCheck from './util/auth/ServerAuthCheck';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -37,7 +38,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange>
           <ApolloProviderWrapper>
-            <Nav />
+            <ServerAuthCheck>
+              <Nav />
+            </ServerAuthCheck>
             {children}
             <Toaster />
           </ApolloProviderWrapper>

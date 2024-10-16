@@ -5,7 +5,9 @@ import FileCard from './_components/FileCard';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home() {
-  const { data, loading, error, refetch } = useGetUserFilesQuery();
+  const { data, loading, error, refetch } = useGetUserFilesQuery({
+    fetchPolicy: 'cache-first',
+  });
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -19,7 +21,9 @@ export default function Home() {
         </div>
       )}
       {error && <div>Error: {error.message}</div>}
-      {data?.getUserFiles.length === 0 && <div>You currently do not have any files uploaded, go upload some!</div>}
+      {data?.getUserFiles.length === 0 && (
+        <div>You currently do not have any files uploaded, go upload some!</div>
+      )}
 
       <div className="grid grid-cols-4 gap-4">
         {data?.getUserFiles.map((file, index) => (

@@ -1,5 +1,13 @@
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, File as FileIcon, FileImage, FileVideo } from 'lucide-react';
+import {
+  Download,
+  Eye,
+  File as FileIcon,
+  FileImage,
+  FileVideo,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface File {
   __typename?: 'RetreiveFileResponseDto';
@@ -14,6 +22,7 @@ interface Props {
 
 export default function FileCard({ file }: Props) {
   const { base64, contentType, fileName } = file;
+  const router = useRouter();
 
   function renderIcon(contentType: string) {
     if (contentType.startsWith('image/')) {
@@ -27,6 +36,27 @@ export default function FileCard({ file }: Props) {
     }
   }
 
+  function previewFile() {
+    const fileUrl = `data:${contentType};base64,${base64}`;
+
+    if (contentType.startsWith('image/')) {
+      router.push(
+        `/file-preview?fileName=${fileName}&contentType=${contentType}&base64=${encodeURIComponent(
+          base64
+        )}`
+      );
+    } else {
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(
+          `<iframe src="${fileUrl}" frameborder="0" style="border:none; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`
+        );
+        newWindow.document.title = fileName;
+        newWindow.document.close();
+      }
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -37,14 +67,24 @@ export default function FileCard({ file }: Props) {
         {/* Render the appropriate file icon */}
         <div className="icon-container mb-4">{renderIcon(contentType)}</div>
 
-        {/* Download Button */}
-        <a
-          href={`data:${contentType};base64,${base64}`}
-          download={fileName}
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition">
-          <Download className="mr-2" size={20} />
-          Download
-        </a>
+        <div className="flex gap-6 items-center justify-center">
+          <Button
+            onClick={previewFile}
+            variant={'secondary'}
+            className="inline-flex items-center px-4 py-2  text-white text-sm font-medium rounded  transition">
+            <Eye className="mr-2" size={20} />
+            Preview
+          </Button>
+
+          {/* Download Button */}
+          <a
+            href={`data:${contentType};base64,${base64}`}
+            download={fileName}
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition">
+            <Download className="mr-2" size={20} />
+            Download
+          </a>
+        </div>
       </CardContent>
     </Card>
   );
