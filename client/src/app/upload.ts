@@ -7,9 +7,15 @@ const getHeaders = () => ({
 });
 
 export default async function uploadFile(formData: FormData) {
-  await fetch(`${API_URL}/upload`, {
+  const res = await fetch(`${API_URL}/upload`, {
     method: 'POST',
     headers: { ...getHeaders() },
     body: formData,
   });
+
+  if (!res.ok) {
+    throw new Error("There was an error uploading the file, please try again.");
+  }
+
+  return { success: true, message: 'File uploaded successfully' };
 }

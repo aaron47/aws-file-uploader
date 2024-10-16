@@ -1,6 +1,0 @@
-query GetUsers {
-	getUsers {
-		_id
-		email
-	}
-}
