@@ -1,15 +1,23 @@
 'use server';
 
-import { getMe } from './get-me';
+import { cookies } from 'next/headers';
+import { AUTHENTICATION_COOKIE_NAME } from '../constants';
+import { isTokenExpired } from '../is-token-expired';
 
 export default async function ServerAuthCheck({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const me = await getMe();
+  const token = cookies().get(AUTHENTICATION_COOKIE_NAME)?.value;
 
-  if (!me.email) {
+  if (!token) {
+    return null;
+  }
+
+  const expired = isTokenExpired(token);
+
+  if (expired) {
     return null;
   }
 

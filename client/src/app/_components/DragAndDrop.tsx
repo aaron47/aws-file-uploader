@@ -31,7 +31,7 @@ export default function MyDropzone({ refetch }: Props) {
       try {
         setIsLoading(true);
         // Await the upload to finish before refetching
-        const {success} = await uploadFile(formData);
+        const { success } = await uploadFile(formData);
 
         if (success) {
           toast({
@@ -41,6 +41,7 @@ export default function MyDropzone({ refetch }: Props) {
             duration: 3000,
           });
           // Call refetch to get updated list of files after upload
+
           await refetch();
         } else {
           toast({
