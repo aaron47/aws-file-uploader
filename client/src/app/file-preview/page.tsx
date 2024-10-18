@@ -1,7 +1,9 @@
 'use client';
 
-import { Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Download } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 export default function FilePreview() {
@@ -14,7 +16,7 @@ export default function FilePreview() {
     return <div>Error: Missing file information</div>;
   }
 
-  const decodedBase64 = sessionStorage.getItem("base64");
+  const decodedBase64 = sessionStorage.getItem('base64');
 
   function renderPreview() {
     const fileUrl = `data:${contentType};base64,${decodedBase64}`;
@@ -55,6 +57,12 @@ export default function FilePreview() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
+      <Link href="/" className="mt-2">
+        <Button variant={'secondary'}>
+          <ArrowLeft size={20} />
+        </Button>
+      </Link>
+
       {renderPreview()}
 
       <a

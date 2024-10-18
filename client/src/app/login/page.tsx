@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import login from './login';
 import Link from 'next/link';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Must be a valid email' }),
@@ -23,6 +24,7 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,7 +37,15 @@ export default function Login() {
     const formData = new FormData();
     formData.append('email', values.email);
     formData.append('password', values.password);
-    await login(formData);
+    const error = await login(formData);
+    if (error) {
+      toast({
+        title: 'Error Logging in',
+        description: error.error,
+        color: 'red',
+        duration: 3000,
+      });
+    }
   }
 
   return (

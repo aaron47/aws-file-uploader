@@ -69,8 +69,8 @@ export default function FileCard({ file }: Props) {
         <div className="flex gap-6 items-center justify-center">
           <Button
             onClick={previewFile}
-            variant={'secondary'}
-            className="inline-flex items-center px-4 py-2  text-white text-sm font-medium rounded  transition">
+            variant={'outline'}
+            className="inline-flex items-center px-4 py-2  dark:text-white text-sm font-medium rounded  transition">
             <Eye className="mr-2" size={20} />
             Preview
           </Button>

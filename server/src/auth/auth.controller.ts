@@ -15,10 +15,14 @@ import { JwtAuthGuard } from 'src/shared/guards/jwt.guard';
 import { Response } from 'express';
 import { GetCurrentUser } from 'src/shared/decorators/get-current-user.decorator';
 import { UserDocument } from 'src/entities/user.schema';
+import { SecretsManagerService } from 'src/s3/secrets-manager.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly secertsManagerService: SecretsManagerService,
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)

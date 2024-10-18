@@ -1,6 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
@@ -9,17 +9,14 @@ import { S3Module } from './s3/s3.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './shared/interceptors/logging.interceptor';
+import { MongooseConfigService } from './config/mongoose-config.service';
 
 @Module({
   imports: [
     PrometheusModule.register(),
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.getOrThrow<string>('MONGODB_URI'),
-      }),
-      imports: [ConfigModule],
+      useClass: MongooseConfigService,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
