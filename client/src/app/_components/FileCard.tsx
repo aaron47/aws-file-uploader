@@ -40,10 +40,9 @@ export default function FileCard({ file }: Props) {
     const fileUrl = `data:${contentType};base64,${base64}`;
 
     if (contentType.startsWith('image/')) {
+      sessionStorage.setItem('base64', base64);
       router.push(
-        `/file-preview?fileName=${fileName}&contentType=${contentType}&base64=${encodeURIComponent(
-          base64
-        )}`
+        `/file-preview?fileName=${fileName}&contentType=${contentType})}`
       );
     } else {
       const newWindow = window.open();

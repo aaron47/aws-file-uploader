@@ -9,18 +9,17 @@ export default function FilePreview() {
 
   const fileName = searchParams.get('fileName');
   const contentType = searchParams.get('contentType');
-  const base64 = searchParams.get('base64');
 
-  if (!fileName || !contentType || !base64) {
+  if (!fileName || !contentType) {
     return <div>Error: Missing file information</div>;
   }
 
-	const decodedBase64 = decodeURIComponent(base64);
+  const decodedBase64 = sessionStorage.getItem("base64");
 
   function renderPreview() {
     const fileUrl = `data:${contentType};base64,${decodedBase64}`;
 
-    if (!fileName || !contentType || !base64) {
+    if (!fileName || !contentType) {
       return <div>Error: Missing file information</div>;
     }
 
@@ -59,7 +58,7 @@ export default function FilePreview() {
       {renderPreview()}
 
       <a
-        href={`data:${contentType};base64,${base64}`}
+        href={`data:${contentType};base64,${decodedBase64}`}
         download={fileName}
         className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition">
         <Download className="mr-2" size={20} />
